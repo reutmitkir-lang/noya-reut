@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>הרפתקאות הווטרינר - Vector Edition</title>
+  <title>הרפתקאות הווטרינר - HD Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     * {
@@ -27,6 +27,7 @@
       text-shadow: 0 3px 6px rgba(0,0,0,0.5);
     }
 
+    /* תפריט ניווט */
     .nav-bar {
       display: flex;
       gap: 15px;
@@ -53,6 +54,7 @@
       box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
     }
 
+    /* מסכים */
     .screen {
       display: none;
       flex-direction: column;
@@ -87,12 +89,70 @@
       background-color: #38bdf8;
     }
 
-    .shop-container {
-      background: #1e293b;
-      border-radius: 14px;
-      padding: 20px;
+    /* מסך מרפאה חצוי */
+    .split-container {
+      display: flex;
+      gap: 20px;
       width: 100%;
+      margin-top: 10px;
+    }
+
+    .split-card {
+      flex: 1;
+      height: 300px;
+      background: #1e293b;
+      border: 3px solid #334155;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 25px;
+      text-align: center;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .split-card:hover {
+      border-color: #38bdf8;
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3);
+      background: #24334d;
+    }
+
+    .split-card h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+
+    .split-card p {
+      color: #94a3b8;
+      font-size: 15px;
+    }
+
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .back-btn {
+      background: #334155;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: #ef4444;
     }
 
     .shop-grid {
@@ -145,9 +205,10 @@
 
   <h1>👨‍⚕️ הרפתקאות הווטרינר - הצלת חיות</h1>
 
+  <!-- תפריט ראשי -->
   <div class="nav-bar">
     <button class="nav-btn active" id="btn-game-tab" onclick="openGameTab()">🎮 התחל משימה</button>
-    <button class="nav-btn" id="btn-clinic-tab" onclick="openClinicTab()">🏥 המרפאה שלי</button>
+    <button class="nav-btn" id="btn-clinic-tab" onclick="openClinicHub()">🏥 פתח מרפאה</button>
   </div>
 
   <!-- מסך 1: המשחק -->
@@ -161,39 +222,63 @@
     <p class="controls-hint">מקשים: חצים ⬅️ ➡️ לריצה | מקש רווח / ⬆️ לקפיצה | קפוץ על האויבים כדי להביס אותם!</p>
   </div>
 
-  <!-- מסך 2: המרפאה -->
-  <div id="screen-clinic" class="screen">
-    <div class="shop-container">
-      <h2>🏥 תצוגה ושדרוג המרפאה הווטרינרית</h2>
-      <p>כסף זמין לשדרוגים: <strong>$<span id="clinic-coins-display">0</span></strong></p>
-      
-      <canvas id="clinicCanvas" width="760" height="320"></canvas>
+  <!-- מסך 2: בחירת מרפאה (מסך חצוי) -->
+  <div id="screen-clinic-hub" class="screen">
+    <h2>בחר אזור לצפייה ושדרוג:</h2>
+    <div class="split-container">
+      <div class="split-card" onclick="openClinicOutside()">
+        <h2>🏡 חוץ המרפאה</h2>
+        <p>צפה במבנה המרפאה, בחצר, באמבולנס ובשלט הראשי.</p>
+      </div>
+      <div class="split-card" onclick="openClinicInside()">
+        <h2>🩺 פנים המרפאה</h2>
+        <p>צפה בחדר הטיפולים, בדלפק הקבלה, ברופאים ובחיות.</p>
+      </div>
+    </div>
+  </div>
 
-      <div class="shop-grid">
-        <div class="shop-item">
-          <h4>🩺 עמדת בדיקה + וטרינרית</h4>
-          <p>מוסיפה רופאה וטרינרית וכלב בבדיקה.</p>
-          <p>מחיר: $150</p>
-          <button class="buy-btn" id="btn-up-doc" onclick="buyUpgrade('doc', 150)">קנה שדרוג</button>
-        </div>
-        <div class="shop-item">
-          <h4>🐕 אזור המתנה מורחב</h4>
-          <p>מוסיף ספסל המתנה מעוצב וחיות נוספות.</p>
-          <p>מחיר: $250</p>
-          <button class="buy-btn" id="btn-up-bench" onclick="buyUpgrade('bench', 250)">קנה שדרוג</button>
-        </div>
-        <div class="shop-item">
-          <h4>🖥️ מכשיר אולטרסאונד מתקדם</h4>
-          <p>ציוד אבחון רפואי מתקדם לטיפול בחיות.</p>
-          <p>מחיר: $400</p>
-          <button class="buy-btn" id="buy-up-xray" onclick="buyUpgrade('xray', 400)">קנה שדרוג</button>
-        </div>
-        <div class="shop-item">
-          <h4>🏥 שלט מואר "VETERINARY CLINIC"</h4>
-          <p>משדרג את הדלפק הראשי בשלט מואר.</p>
-          <p>מחיר: $600</p>
-          <button class="buy-btn" id="buy-up-sign" onclick="buyUpgrade('sign', 600)">קנה שדרוג</button>
-        </div>
+  <!-- מסך 3: חוץ המרפאה -->
+  <div id="screen-clinic-outside" class="screen">
+    <div class="view-header">
+      <h2>🏡 חוץ המרפאה הווטרינרית</h2>
+      <button class="back-btn" onclick="openClinicHub()">🔙 חזור לבחירה</button>
+    </div>
+    <canvas id="outsideCanvas" width="800" height="260"></canvas>
+    <div class="shop-grid">
+      <div class="shop-item">
+        <h4>🖼️ שלט מרפאה מואר</h4>
+        <p>מוסיף שלט רפואי מואר בראש המבנה.</p>
+        <p>מחיר: $100</p>
+        <button class="buy-btn" id="btn-up-sign" onclick="buyUpgrade('sign', 100)">קנה שדרוג</button>
+      </div>
+      <div class="shop-item">
+        <h4>🚑 אמבולנס חילוץ</h4>
+        <p>מעמיד אמבולנס בחצר המרפאה.</p>
+        <p>מחיר: $500</p>
+        <button class="buy-btn" id="btn-up-amb" onclick="buyUpgrade('ambulance', 500)">קנה שדרוג</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- מסך 4: פנים המרפאה -->
+  <div id="screen-clinic-inside" class="screen">
+    <div class="view-header">
+      <h2>🩺 פנים המרפאה וחדרי הטיפול</h2>
+      <button class="back-btn" onclick="openClinicHub()">🔙 חזור לבחירה</button>
+    </div>
+    <canvas id="insideCanvas" width="800" height="260"></canvas>
+    <div class="shop-grid">
+      <div class="shop-item">
+        <h4>🛏️ עמדת טיפול + וטרינרית</h4>
+        <p>מוסיפה רופאה וטרינרית וכלב בבדיקה.</p>
+        <p>מחיר: $150</p>
+        <button class="buy-btn" id="btn-up-doc" onclick="buyUpgrade('doc', 150)">קנה שדרוג</button>
+      </div>
+      <div class="shop-item">
+        <h4>🖥️ מכשיר אולטרסאונד מתקדם</h4>
+        <p>ציוד אבחון רפואי מתקדם לטיפול בחיות.</p>
+        <p>מחיר: $350</p>
+        <button class="buy-btn" id="btn-up-xray" onclick="buyUpgrade('xray', 350)">קנה שדרוג</button>
       </div>
     </div>
   </div>
@@ -203,7 +288,12 @@
     let coins = 0;
     let currentLevel = 1;
     let lives = 3;
-    let upgrades = { doc: false, bench: false, xray: false, sign: false };
+    let upgrades = { sign: false, ambulance: false, doc: false, xray: false };
+
+    // --- טעינת תמונות PNG ריאליסטיות ---
+    const dogImg = new Image();
+    // תמונת PNG שקופה של כלב מעוצב באיכות גבוהה
+    dogImg.src = 'https://raw.githubusercontent.com/TodePond/Imp/main/dog.png'; 
 
     function hideAllScreens() {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -214,16 +304,30 @@
       hideAllScreens();
       document.getElementById('screen-game').classList.add('active');
       document.getElementById('btn-game-tab').classList.add('active');
-      isGameRunning = true;
+      isGameRunning = true; // הפעלת המשחק בלחיצה על "התחל משימה"
     }
 
-    function openClinicTab() {
+    function openClinicHub() {
+      hideAllScreens();
+      isGameRunning = false; // עצירת המשחק במעבר למרפאה!
+      document.getElementById('screen-clinic-hub').classList.add('active');
+      document.getElementById('btn-clinic-tab').classList.add('active');
+    }
+
+    function openClinicOutside() {
       hideAllScreens();
       isGameRunning = false;
-      document.getElementById('screen-clinic').classList.add('active');
+      document.getElementById('screen-clinic-outside').classList.add('active');
       document.getElementById('btn-clinic-tab').classList.add('active');
-      document.getElementById('clinic-coins-display').innerText = coins;
-      drawClinicCanvas();
+      drawOutsideCanvas();
+    }
+
+    function openClinicInside() {
+      hideAllScreens();
+      isGameRunning = false;
+      document.getElementById('screen-clinic-inside').classList.add('active');
+      document.getElementById('btn-clinic-tab').classList.add('active');
+      drawInsideCanvas();
     }
 
     // --- מנוע המשחק ---
@@ -257,7 +361,7 @@
       while (xCursor < levelWidth - 300) {
         let chunkW = 500 + Math.random() * 200;
         platforms.push({ x: xCursor, y: 350, w: chunkW, h: 50 });
-        xCursor += chunkW + 90;
+        xCursor += chunkW + 90; // רווח קל לקפיצה
       }
       platforms.push({ x: xCursor, y: 350, w: 500, h: 50 });
 
@@ -409,7 +513,6 @@
       document.getElementById('hud-lives').innerText = '❤️'.repeat(lives);
     }
 
-    // --- ציור אלמנטים בסגנון וקטורי מפורט ---
     function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
@@ -421,12 +524,12 @@
         ctx.fillRect(p.x, p.y, p.w, p.h);
         ctx.fillStyle = '#22c55e';
         ctx.fillRect(p.x, p.y, p.w, 10);
-        ctx.strokeStyle = '#1e293b';
+        ctx.strokeStyle = '#0f172a';
         ctx.lineWidth = 2;
         ctx.strokeRect(p.x, p.y, p.w, p.h);
       }
 
-      // צינורות תלת-ממדיים מבריקים
+      // צינורות
       for (let pipe of pipes) {
         let grad = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.w, 0);
         grad.addColorStop(0, '#15803d');
@@ -435,11 +538,8 @@
         ctx.fillStyle = grad;
         ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h);
         ctx.fillRect(pipe.x - 4, pipe.y, pipe.w + 8, 16);
-
         ctx.strokeStyle = '#0f172a';
-        ctx.lineWidth = 2;
         ctx.strokeRect(pipe.x, pipe.y, pipe.w, pipe.h);
-        ctx.strokeRect(pipe.x - 4, pipe.y, pipe.w + 8, 16);
       }
 
       // לבנים ובלוקי ?
@@ -471,172 +571,109 @@
         ctx.fillStyle = '#facc15'; ctx.fillRect(e.x + (e.vx < 0 ? -2 : 22), e.y + 11, 10, 8);
       }
 
-      // כלב וקטורי בסגנון התמונה להצלה!
-      drawVectorDog(ctx, petPos.x, petPos.y);
+      // ציור תמונת הכלב הריאליסטית (PNG)!
+      ctx.drawImage(dogImg, petPos.x, petPos.y - 10, 50, 50);
 
-      // וטרינר וקטורי
-      drawVectorVet(ctx, player.x, player.y, player.facing);
+      // ציור הווטרינר בעל הפנים
+      drawVetSprite(ctx, player.x, player.y, player.facing);
 
       ctx.restore();
     }
 
-    // ציור כלב וקטורי מפורט (לפי סגנון האיור בתמונה)
-    function drawVectorDog(c, x, y) {
-      c.save();
-
-      // קו מתאר שחור בולט לכל הציור
-      c.strokeStyle = '#1e293b';
-      c.lineWidth = 2.5;
-
-      // גוף
-      c.fillStyle = '#f59e0b'; // זהוב
-      c.beginPath();
-      c.ellipse(x + 20, y + 35, 16, 18, 0, 0, Math.PI * 2);
-      c.fill(); c.stroke();
-
-      // חזה לבן
-      c.fillStyle = '#ffffff';
-      c.beginPath();
-      c.ellipse(x + 20, y + 38, 10, 12, 0, 0, Math.PI * 2);
-      c.fill();
-
-      // ראש
-      c.fillStyle = '#f59e0b';
-      c.beginPath();
-      c.arc(x + 20, y + 18, 16, 0, Math.PI * 2);
-      c.fill(); c.stroke();
-
-      // כתם לבן על המצח
-      c.fillStyle = '#ffffff';
-      c.beginPath();
-      c.ellipse(x + 20, y + 14, 5, 9, 0, 0, Math.PI * 2);
-      c.fill();
-
-      // אוזניים חומות שמוטות
-      c.fillStyle = '#d97706';
-      c.beginPath(); c.ellipse(x + 5, y + 18, 6, 11, 0.3, 0, Math.PI * 2); c.fill(); c.stroke();
-      c.beginPath(); c.ellipse(x + 35, y + 18, 6, 11, -0.3, 0, Math.PI * 2); c.fill(); c.stroke();
-
-      // עיניים גדולות ומביעות (כמו בתמונה)
-      c.fillStyle = '#1e293b';
-      c.beginPath(); c.arc(x + 14, y + 16, 4, 0, Math.PI * 2); c.fill();
-      c.beginPath(); c.arc(x + 26, y + 16, 4, 0, Math.PI * 2); c.fill();
-      // הברקות לבנות בעיניים
-      c.fillStyle = '#ffffff';
-      c.beginPath(); c.arc(x + 13, y + 15, 1.5, 0, Math.PI * 2); c.fill();
-      c.beginPath(); c.arc(x + 25, y + 15, 1.5, 0, Math.PI * 2); c.fill();
-
-      // אף שחור ופה מחייך
-      c.fillStyle = '#1e293b';
-      c.beginPath(); c.arc(x + 20, y + 21, 3, 0, Math.PI * 2); c.fill();
-
-      c.strokeStyle = '#1e293b'; c.lineWidth = 1.8;
-      c.beginPath(); c.arc(x + 20, y + 23, 4, 0.1, Math.PI - 0.1); c.stroke();
-
-      // קולר כחול עם תג מוזהב
-      c.fillStyle = '#0284c7';
-      c.fillRect(x + 10, y + 28, 20, 5);
-      c.fillStyle = '#facc15';
-      c.beginPath(); c.arc(x + 20, y + 33, 3.5, 0, Math.PI * 2); c.fill();
-
-      c.restore();
-    }
-
-    // ציור הווטרינר בסגנון וקטורי מפורט
-    function drawVectorVet(c, x, y, facing) {
+    function drawVetSprite(c, x, y, facing) {
       c.save();
       c.strokeStyle = '#0f172a';
-      c.lineWidth = 2.5;
+      c.lineWidth = 2;
 
-      // חלוק לבן
-      c.fillStyle = '#ffffff';
-      c.fillRect(x + 6, y + 18, 24, 22);
-      c.strokeRect(x + 6, y + 18, 24, 22);
+      c.fillStyle = '#ffffff'; c.fillRect(x + 6, y + 18, 24, 22); c.strokeRect(x + 6, y + 18, 24, 22);
+      c.fillStyle = '#0284c7'; c.fillRect(x + 13, y + 18, 10, 10);
 
-      // חולצה רפואית תכלת
-      c.fillStyle = '#0284c7';
-      c.fillRect(x + 13, y + 18, 10, 10);
-
-      // מכנסיים
       c.fillStyle = '#1e293b';
       c.fillRect(x + 8, y + 40, 8, 12);
       c.fillRect(x + 20, y + 40, 8, 12);
 
-      // ראש
       c.fillStyle = '#ffdbac';
       c.beginPath(); c.arc(x + 18, y + 11, 11, 0, Math.PI * 2); c.fill(); c.stroke();
 
-      // שיער חום
       c.fillStyle = '#451a03';
       c.beginPath(); c.arc(x + 18, y + 8, 11, Math.PI, Math.PI * 2); c.fill();
 
-      // עיניים והברקה
       c.fillStyle = '#0f172a';
       let offset = facing === 'right' ? 2 : -2;
       c.beginPath(); c.arc(x + 14 + offset, y + 10, 2.2, 0, Math.PI * 2); c.fill();
       c.beginPath(); c.arc(x + 22 + offset, y + 10, 2.2, 0, Math.PI * 2); c.fill();
 
-      // חיוך
       c.strokeStyle = '#ef4444'; c.lineWidth = 1.8;
       c.beginPath(); c.arc(x + 18 + offset, y + 13, 4, 0.2, Math.PI - 0.2); c.stroke();
 
-      // סטטוסקופ
       c.strokeStyle = '#334155'; c.lineWidth = 2.5;
       c.beginPath(); c.arc(x + 18, y + 20, 7, 0, Math.PI); c.stroke();
 
       c.restore();
     }
 
-    // --- ציור המרפאה הריאליסטית ---
-    function drawClinicCanvas() {
-      const c = document.getElementById('clinicCanvas');
+    // --- ציור חוץ המרפאה ---
+    function drawOutsideCanvas() {
+      const c = document.getElementById('outsideCanvas');
       const cv = c.getContext('2d');
       cv.clearRect(0, 0, c.width, c.height);
 
-      // קיר טורקיז מודרני
-      cv.fillStyle = '#75bba8'; cv.fillRect(0, 0, c.width, 260);
-      cv.fillStyle = '#64748b'; cv.fillRect(0, 260, c.width, 60);
+      cv.fillStyle = '#70c5ce'; cv.fillRect(0, 0, c.width, 200);
+      cv.fillStyle = '#4CAF50'; cv.fillRect(0, 200, c.width, 60);
+
+      // מבנה
+      cv.fillStyle = '#ffffff'; cv.fillRect(200, 70, 300, 130);
+      cv.fillStyle = '#d32f2f';
+      cv.beginPath(); cv.moveTo(180, 70); cv.lineTo(350, 20); cv.lineTo(520, 70); cv.fill();
+
+      cv.fillStyle = '#5d4037'; cv.fillRect(320, 130, 50, 70);
+      cv.fillStyle = '#e0f7fa'; cv.fillRect(230, 100, 50, 40); cv.fillRect(410, 100, 50, 40);
+
+      if (upgrades.sign) {
+        cv.fillStyle = '#fff'; cv.fillRect(290, 80, 120, 30);
+        cv.strokeStyle = '#000'; cv.strokeRect(290, 80, 120, 30);
+        cv.fillStyle = '#d32f2f'; cv.font = 'bold 14px Rubik'; cv.fillText('➕ מרפאה', 315, 100);
+      }
+
+      if (upgrades.ambulance) {
+        cv.fillStyle = '#ffffff'; cv.fillRect(550, 140, 120, 60);
+        cv.fillStyle = '#d32f2f'; cv.fillRect(550, 160, 120, 10);
+        cv.fillStyle = '#333'; cv.beginPath(); cv.arc(580, 200, 12, 0, Math.PI*2); cv.arc(640, 200, 12, 0, Math.PI*2); cv.fill();
+      }
+    }
+
+    // --- ציור פנים המרפאה (עם התמונה המעוצבת!) ---
+    function drawInsideCanvas() {
+      const c = document.getElementById('insideCanvas');
+      const cv = c.getContext('2d');
+      cv.clearRect(0, 0, c.width, c.height);
+
+      cv.fillStyle = '#75bba8'; cv.fillRect(0, 0, c.width, 200);
+      cv.fillStyle = '#64748b'; cv.fillRect(0, 200, c.width, 60);
 
       // מנורות תלויות
       for (let lx of [200, 560]) {
         cv.fillStyle = '#334155'; cv.fillRect(lx, 0, 4, 30);
         cv.fillStyle = '#38bdf8'; cv.fillRect(lx - 20, 30, 44, 12);
-        cv.fillStyle = 'rgba(255, 255, 255, 0.15)';
-        cv.beginPath(); cv.moveTo(lx - 20, 42); cv.lineTo(lx + 24, 42);
-        cv.lineTo(lx + 80, 260); cv.lineTo(lx - 80, 260); cv.fill();
       }
-
-      // מדף תרופות ופוסטר
-      cv.fillStyle = '#ffffff'; cv.fillRect(100, 70, 120, 8);
-      cv.fillStyle = '#f87171'; cv.fillRect(110, 50, 15, 20);
-      cv.fillStyle = '#60a5fa'; cv.fillRect(135, 45, 18, 25);
-
-      cv.fillStyle = '#ffffff'; cv.fillRect(310, 60, 60, 80);
-      cv.fillStyle = '#334155'; cv.font = '24px Arial'; cv.fillText('🐾', 325, 110);
 
       // דלפק קבלה
-      cv.fillStyle = '#ffffff'; cv.fillRect(40, 180, 260, 80);
-      cv.strokeStyle = '#1e293b'; cv.lineWidth = 2; cv.strokeRect(40, 180, 260, 80);
-      cv.fillStyle = '#0284c7'; cv.font = 'bold 16px Rubik';
-      cv.fillText('VETERINARY CLINIC', 80, 225);
+      cv.fillStyle = '#ffffff'; cv.fillRect(60, 140, 220, 70);
+      cv.strokeStyle = '#1e293b'; cv.lineWidth = 2; cv.strokeRect(60, 140, 220, 70);
+      cv.fillStyle = '#0284c7'; cv.font = 'bold 14px Rubik';
+      cv.fillText('VETERINARY CLINIC', 95, 180);
 
-      // כלב וקטורי על הדלפק
-      drawVectorDog(cv, 80, 125);
+      // הכלב הריאליסטי יושב ליד הדלפק!
+      cv.drawImage(dogImg, 290, 130, 70, 70);
 
-      // שדרוגים
       if (upgrades.doc) {
-        drawVectorVet(cv, 580, 110, 'left');
-        drawVectorDog(cv, 520, 145);
-      }
-
-      if (upgrades.bench) {
-        cv.fillStyle = '#38bdf8'; cv.fillRect(450, 200, 180, 15);
-        cv.fillStyle = '#334155'; cv.fillRect(470, 215, 10, 45); cv.fillRect(600, 215, 10, 45);
+        drawVetSprite(cv, 500, 100, 'left');
+        cv.drawImage(dogImg, 430, 130, 60, 60);
       }
 
       if (upgrades.xray) {
-        cv.fillStyle = '#1e293b'; cv.fillRect(380, 140, 50, 80);
-        cv.fillStyle = '#38bdf8'; cv.fillRect(390, 150, 30, 30);
+        cv.fillStyle = '#1e293b'; cv.fillRect(620, 100, 50, 80);
+        cv.fillStyle = '#38bdf8'; cv.fillRect(630, 110, 30, 30);
       }
     }
 
@@ -644,10 +681,15 @@
       if (coins >= cost) {
         coins -= cost;
         upgrades[type] = true;
-        document.getElementById('clinic-coins-display').innerText = coins;
         updateHUD();
-        drawClinicCanvas();
-        alert('תתחדשו! השדרוג נוסף למרפאה!');
+        alert('תתחדשו! השדרוג נרכש בהצלחה!');
+        if (type === 'sign' || type === 'ambulance') {
+          document.getElementById(`btn-up-${type === 'sign' ? 'sign' : 'amb'}`).disabled = true;
+          drawOutsideCanvas();
+        } else {
+          document.getElementById(`btn-up-${type === 'doc' ? 'doc' : 'xray'}`).disabled = true;
+          drawInsideCanvas();
+        }
       } else {
         alert('אין מספיק כסף! צאו למשימות נוספות.');
       }
