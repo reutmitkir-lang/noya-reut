@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>הרפתקאות הווטרינר - גרסה מתוקנת ומשודרגת</title>
+  <title>הרפתקאות הווטרינר - Vector Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     * {
@@ -36,21 +36,21 @@
     .nav-btn {
       background: #334155;
       color: #fff;
-      border: 2px solid #06b6d4;
+      border: 2px solid #38bdf8;
       padding: 12px 28px;
       font-size: 18px;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
     }
 
     .nav-btn.active, .nav-btn:hover {
-      background: #06b6d4;
+      background: #38bdf8;
       color: #0f172a;
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(6, 182, 212, 0.4);
+      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
     }
 
     .screen {
@@ -68,10 +68,10 @@
     .dashboard {
       display: flex;
       gap: 20px;
-      background: rgba(30, 41, 59, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(30, 41, 59, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.15);
       padding: 12px 24px;
-      border-radius: 12px;
+      border-radius: 14px;
       margin-bottom: 12px;
       font-size: 18px;
       font-weight: bold;
@@ -82,14 +82,14 @@
 
     canvas {
       border: 4px solid #ffffff;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.6);
       background-color: #38bdf8;
     }
 
     .shop-container {
       background: #1e293b;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 20px;
       width: 100%;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
@@ -171,7 +171,7 @@
 
       <div class="shop-grid">
         <div class="shop-item">
-          <h4>🩺 עמדת טיפול נוספת + רופאה</h4>
+          <h4>🩺 עמדת בדיקה + וטרינרית</h4>
           <p>מוסיפה רופאה וטרינרית וכלב בבדיקה.</p>
           <p>מחיר: $150</p>
           <button class="buy-btn" id="btn-up-doc" onclick="buyUpgrade('doc', 150)">קנה שדרוג</button>
@@ -219,7 +219,7 @@
 
     function openClinicTab() {
       hideAllScreens();
-      isGameRunning = false; // עצירת המשחק בלשונית המרפאה!
+      isGameRunning = false;
       document.getElementById('screen-clinic').classList.add('active');
       document.getElementById('btn-clinic-tab').classList.add('active');
       document.getElementById('clinic-coins-display').innerText = coins;
@@ -231,9 +231,9 @@
     const ctx = canvas.getContext('2d');
 
     const player = {
-      x: 50, y: 200, w: 32, h: 48,
+      x: 50, y: 200, w: 36, h: 52,
       vx: 0, vy: 0,
-      speed: 5.0, jumpPower: -13.0, // קפיצה גבוהה שסוגרת מכשולים בקלות
+      speed: 5.0, jumpPower: -13.0,
       isGrounded: false, facing: 'right'
     };
 
@@ -246,7 +246,6 @@
     let enemies = [];
     let petPos = { x: 0, y: 0 };
 
-    // מחולל שלבים מתוקן - ללא חסימות או מבוי סתום!
     function buildLevel(lvl) {
       levelWidth = 2200 + lvl * 400;
       platforms = [];
@@ -254,43 +253,39 @@
       pipes = [];
       enemies = [];
 
-      // קרקע רציפה עם בורות קטנים וסבירים
       let xCursor = 0;
       while (xCursor < levelWidth - 300) {
         let chunkW = 500 + Math.random() * 200;
         platforms.push({ x: xCursor, y: 350, w: chunkW, h: 50 });
-        xCursor += chunkW + 90; // רווח בור של 90 פיקסלים בלבד (קל לקפיצה)
+        xCursor += chunkW + 90;
       }
       platforms.push({ x: xCursor, y: 350, w: 500, h: 50 });
 
-      // צינורות בגובה נמוך ובטוח (עד 45 פיקסלים, שחקן קופץ 130 פיקסלים)
       for (let x = 400; x < levelWidth - 400; x += 300) {
         if (Math.random() > 0.3) {
-          let pipeH = 35 + Math.random() * 15; // מוגבל עד 50 פיקסלים מקסימום!
-          pipes.push({ x: x, y: 350 - pipeH, w: 52, h: pipeH });
+          let pipeH = 35 + Math.random() * 15;
+          pipes.push({ x: x, y: 350 - pipeH, w: 54, h: pipeH });
         }
 
-        // לבנים גבוהות - תמיד משאירות מרווח קפיצה!
         if (Math.random() > 0.4) {
-          let blockY = 190; // גבוה מספיק מעל הצינורות
+          let blockY = 190;
           for (let b = 0; b < 3; b++) {
             blocks.push({
-              x: x + b * 32, y: blockY, w: 32, h: 32,
+              x: x + b * 34, y: blockY, w: 34, h: 34,
               type: (b === 1) ? 'question' : 'brick', hit: false
             });
           }
         }
 
-        // אויבים מתוניים
         if (Math.random() > 0.5) {
           enemies.push({
-            x: x + 120, y: 320, w: 30, h: 30,
+            x: x + 120, y: 318, w: 32, h: 32,
             vx: -1.2, alive: true
           });
         }
       }
 
-      petPos = { x: levelWidth - 120, y: 300 };
+      petPos = { x: levelWidth - 120, y: 295 };
       player.x = 50; player.y = 200; player.vx = 0; player.vy = 0;
     }
 
@@ -323,7 +318,6 @@
       player.y += player.vy;
       player.isGrounded = false;
 
-      // התנגשות בקרקע
       for (let p of platforms) {
         if (player.x < p.x + p.w && player.x + player.w > p.x &&
             player.y + player.h >= p.y && player.y + player.h <= p.y + 15 && player.vy >= 0) {
@@ -333,7 +327,6 @@
         }
       }
 
-      // התנגשות בצינורות (ניתן לעלות עליהם מכל כיוון)
       for (let pipe of pipes) {
         if (player.x < pipe.x + pipe.w && player.x + player.w > pipe.x &&
             player.y + player.h >= pipe.y && player.y <= pipe.y + pipe.h) {
@@ -348,7 +341,6 @@
         }
       }
 
-      // התנגשות בלבנים
       for (let b of blocks) {
         if (player.x < b.x + b.w && player.x + player.w > b.x &&
             player.y < b.y + b.h && player.y + player.h > b.y) {
@@ -417,7 +409,7 @@
       document.getElementById('hud-lives').innerText = '❤️'.repeat(lives);
     }
 
-    // --- ציור עולם המשחק ---
+    // --- ציור אלמנטים בסגנון וקטורי מפורט ---
     function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
@@ -429,34 +421,43 @@
         ctx.fillRect(p.x, p.y, p.w, p.h);
         ctx.fillStyle = '#22c55e';
         ctx.fillRect(p.x, p.y, p.w, 10);
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(p.x, p.y, p.w, p.h);
       }
 
-      // צינורות תלת-ממדיים
+      // צינורות תלת-ממדיים מבריקים
       for (let pipe of pipes) {
         let grad = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.w, 0);
         grad.addColorStop(0, '#15803d');
-        grad.addColorStop(0.4, '#4ade80');
+        grad.addColorStop(0.3, '#4ade80');
         grad.addColorStop(1, '#166534');
         ctx.fillStyle = grad;
         ctx.fillRect(pipe.x, pipe.y, pipe.w, pipe.h);
         ctx.fillRect(pipe.x - 4, pipe.y, pipe.w + 8, 16);
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pipe.x, pipe.y, pipe.w, pipe.h);
+        ctx.strokeRect(pipe.x - 4, pipe.y, pipe.w + 8, 16);
       }
 
-      // לבנים
+      // לבנים ובלוקי ?
       for (let b of blocks) {
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#0f172a';
         if (b.type === 'brick') {
           ctx.fillStyle = '#b45309';
           ctx.fillRect(b.x, b.y, b.w, b.h);
-          ctx.strokeStyle = '#fde68a';
           ctx.strokeRect(b.x, b.y, b.w, b.h);
         } else {
-          ctx.fillStyle = b.hit ? '#78350f' : '#eab308';
+          ctx.fillStyle = b.hit ? '#78350f' : '#facc15';
           ctx.fillRect(b.x, b.y, b.w, b.h);
-          ctx.strokeStyle = '#fff';
           ctx.strokeRect(b.x, b.y, b.w, b.h);
           if (!b.hit) {
-            ctx.fillStyle = '#fff'; ctx.font = 'bold 18px Rubik';
-            ctx.fillText('?', b.x + 10, b.y + 23);
+            ctx.fillStyle = '#1e293b';
+            ctx.font = 'bold 20px Rubik';
+            ctx.fillText('?', b.x + 11, b.y + 25);
           }
         }
       }
@@ -465,114 +466,174 @@
       for (let e of enemies) {
         if (!e.alive) continue;
         ctx.fillStyle = '#ef4444';
-        ctx.beginPath(); ctx.arc(e.x + 15, e.y + 15, 14, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = '#facc15'; ctx.fillRect(e.x + (e.vx < 0 ? -2 : 20), e.y + 10, 10, 8);
+        ctx.beginPath(); ctx.arc(e.x + 16, e.y + 16, 14, 0, Math.PI*2); ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = '#0f172a'; ctx.stroke();
+        ctx.fillStyle = '#facc15'; ctx.fillRect(e.x + (e.vx < 0 ? -2 : 22), e.y + 11, 10, 8);
       }
 
-      // חיה בסוף השלב
-      ctx.fillStyle = '#f97316';
-      ctx.fillRect(petPos.x, petPos.y + 10, 32, 22);
-      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(petPos.x + 8, petPos.y + 16, 3, 0, Math.PI*2); ctx.fill();
+      // כלב וקטורי בסגנון התמונה להצלה!
+      drawVectorDog(ctx, petPos.x, petPos.y);
 
-      // ציור הווטרינר בעל הפנים!
-      drawVetSprite(ctx, player.x, player.y, player.facing);
+      // וטרינר וקטורי
+      drawVectorVet(ctx, player.x, player.y, player.facing);
 
       ctx.restore();
     }
 
-    // ציור הווטרינר עם פנים מפורטות, חיוך וסטטוסקופ!
-    function drawVetSprite(c, x, y, facing) {
+    // ציור כלב וקטורי מפורט (לפי סגנון האיור בתמונה)
+    function drawVectorDog(c, x, y) {
       c.save();
-      // חלוק לבן
-      c.fillStyle = '#ffffff'; c.fillRect(x + 4, y + 16, 24, 20);
-      c.fillStyle = '#06b6d4'; c.fillRect(x + 11, y + 16, 10, 8); // חולצה רפואית מתחת
 
-      // מכנסיים
-      c.fillStyle = '#1e293b';
-      c.fillRect(x + 6, y + 36, 8, 12);
-      c.fillRect(x + 18, y + 36, 8, 12);
+      // קו מתאר שחור בולט לכל הציור
+      c.strokeStyle = '#1e293b';
+      c.lineWidth = 2.5;
 
-      // ראש (עור)
-      c.fillStyle = '#ffdbac';
-      c.beginPath(); c.arc(x + 16, y + 10, 10, 0, Math.PI * 2); c.fill();
-
-      // שיער חום
-      c.fillStyle = '#4a2e00';
-      c.beginPath(); c.arc(x + 16, y + 7, 10, Math.PI, Math.PI * 2); c.fill();
-
-      // פנים - עיניים וחיוך ידידותי!
-      c.fillStyle = '#1e293b';
-      let eyeOffset = facing === 'right' ? 2 : -2;
+      // גוף
+      c.fillStyle = '#f59e0b'; // זהוב
       c.beginPath();
-      c.arc(x + 13 + eyeOffset, y + 9, 1.8, 0, Math.PI * 2);
-      c.arc(x + 19 + eyeOffset, y + 9, 1.8, 0, Math.PI * 2);
+      c.ellipse(x + 20, y + 35, 16, 18, 0, 0, Math.PI * 2);
+      c.fill(); c.stroke();
+
+      // חזה לבן
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.ellipse(x + 20, y + 38, 10, 12, 0, 0, Math.PI * 2);
       c.fill();
 
-      // חיוך
-      c.strokeStyle = '#ef4444'; c.lineWidth = 1.5;
-      c.beginPath(); c.arc(x + 16 + eyeOffset, y + 12, 3.5, 0.2, Math.PI - 0.2); c.stroke();
+      // ראש
+      c.fillStyle = '#f59e0b';
+      c.beginPath();
+      c.arc(x + 20, y + 18, 16, 0, Math.PI * 2);
+      c.fill(); c.stroke();
 
-      // סטטוסקופ על הצוואר
-      c.strokeStyle = '#334155'; c.lineWidth = 2;
-      c.beginPath(); c.arc(x + 16, y + 18, 6, 0, Math.PI); c.stroke();
+      // כתם לבן על המצח
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.ellipse(x + 20, y + 14, 5, 9, 0, 0, Math.PI * 2);
+      c.fill();
+
+      // אוזניים חומות שמוטות
+      c.fillStyle = '#d97706';
+      c.beginPath(); c.ellipse(x + 5, y + 18, 6, 11, 0.3, 0, Math.PI * 2); c.fill(); c.stroke();
+      c.beginPath(); c.ellipse(x + 35, y + 18, 6, 11, -0.3, 0, Math.PI * 2); c.fill(); c.stroke();
+
+      // עיניים גדולות ומביעות (כמו בתמונה)
+      c.fillStyle = '#1e293b';
+      c.beginPath(); c.arc(x + 14, y + 16, 4, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(x + 26, y + 16, 4, 0, Math.PI * 2); c.fill();
+      // הברקות לבנות בעיניים
+      c.fillStyle = '#ffffff';
+      c.beginPath(); c.arc(x + 13, y + 15, 1.5, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(x + 25, y + 15, 1.5, 0, Math.PI * 2); c.fill();
+
+      // אף שחור ופה מחייך
+      c.fillStyle = '#1e293b';
+      c.beginPath(); c.arc(x + 20, y + 21, 3, 0, Math.PI * 2); c.fill();
+
+      c.strokeStyle = '#1e293b'; c.lineWidth = 1.8;
+      c.beginPath(); c.arc(x + 20, y + 23, 4, 0.1, Math.PI - 0.1); c.stroke();
+
+      // קולר כחול עם תג מוזהב
+      c.fillStyle = '#0284c7';
+      c.fillRect(x + 10, y + 28, 20, 5);
+      c.fillStyle = '#facc15';
+      c.beginPath(); c.arc(x + 20, y + 33, 3.5, 0, Math.PI * 2); c.fill();
 
       c.restore();
     }
 
-    // --- ציור המרפאה הריאליסטית (לפי התמונה) ---
+    // ציור הווטרינר בסגנון וקטורי מפורט
+    function drawVectorVet(c, x, y, facing) {
+      c.save();
+      c.strokeStyle = '#0f172a';
+      c.lineWidth = 2.5;
+
+      // חלוק לבן
+      c.fillStyle = '#ffffff';
+      c.fillRect(x + 6, y + 18, 24, 22);
+      c.strokeRect(x + 6, y + 18, 24, 22);
+
+      // חולצה רפואית תכלת
+      c.fillStyle = '#0284c7';
+      c.fillRect(x + 13, y + 18, 10, 10);
+
+      // מכנסיים
+      c.fillStyle = '#1e293b';
+      c.fillRect(x + 8, y + 40, 8, 12);
+      c.fillRect(x + 20, y + 40, 8, 12);
+
+      // ראש
+      c.fillStyle = '#ffdbac';
+      c.beginPath(); c.arc(x + 18, y + 11, 11, 0, Math.PI * 2); c.fill(); c.stroke();
+
+      // שיער חום
+      c.fillStyle = '#451a03';
+      c.beginPath(); c.arc(x + 18, y + 8, 11, Math.PI, Math.PI * 2); c.fill();
+
+      // עיניים והברקה
+      c.fillStyle = '#0f172a';
+      let offset = facing === 'right' ? 2 : -2;
+      c.beginPath(); c.arc(x + 14 + offset, y + 10, 2.2, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(x + 22 + offset, y + 10, 2.2, 0, Math.PI * 2); c.fill();
+
+      // חיוך
+      c.strokeStyle = '#ef4444'; c.lineWidth = 1.8;
+      c.beginPath(); c.arc(x + 18 + offset, y + 13, 4, 0.2, Math.PI - 0.2); c.stroke();
+
+      // סטטוסקופ
+      c.strokeStyle = '#334155'; c.lineWidth = 2.5;
+      c.beginPath(); c.arc(x + 18, y + 20, 7, 0, Math.PI); c.stroke();
+
+      c.restore();
+    }
+
+    // --- ציור המרפאה הריאליסטית ---
     function drawClinicCanvas() {
       const c = document.getElementById('clinicCanvas');
       const cv = c.getContext('2d');
       cv.clearRect(0, 0, c.width, c.height);
 
-      // קיר אחורי בטורקיז מרגיע (כמו בתמונה)
+      // קיר טורקיז מודרני
       cv.fillStyle = '#75bba8'; cv.fillRect(0, 0, c.width, 260);
-      cv.fillStyle = '#94a3b8'; cv.fillRect(0, 260, c.width, 60); // רצפה
+      cv.fillStyle = '#64748b'; cv.fillRect(0, 260, c.width, 60);
 
-      // מנורות תקרה עם אלומות אור
+      // מנורות תלויות
       for (let lx of [200, 560]) {
         cv.fillStyle = '#334155'; cv.fillRect(lx, 0, 4, 30);
         cv.fillStyle = '#38bdf8'; cv.fillRect(lx - 20, 30, 44, 12);
-        // אלומת אור
         cv.fillStyle = 'rgba(255, 255, 255, 0.15)';
         cv.beginPath(); cv.moveTo(lx - 20, 42); cv.lineTo(lx + 24, 42);
         cv.lineTo(lx + 80, 260); cv.lineTo(lx - 80, 260); cv.fill();
       }
 
       // מדף תרופות ופוסטר
-      cv.fillStyle = '#ffffff'; cv.fillRect(100, 70, 120, 8); // מדף
-      cv.fillStyle = '#f87171'; cv.fillRect(110, 50, 15, 20); // בקבוק תרופה
+      cv.fillStyle = '#ffffff'; cv.fillRect(100, 70, 120, 8);
+      cv.fillStyle = '#f87171'; cv.fillRect(110, 50, 15, 20);
       cv.fillStyle = '#60a5fa'; cv.fillRect(135, 45, 18, 25);
 
-      // פוסטר וטרינרי על הקיר
       cv.fillStyle = '#ffffff'; cv.fillRect(310, 60, 60, 80);
       cv.fillStyle = '#334155'; cv.font = '24px Arial'; cv.fillText('🐾', 325, 110);
 
-      // דלפק קבלה ראשי
+      // דלפק קבלה
       cv.fillStyle = '#ffffff'; cv.fillRect(40, 180, 260, 80);
+      cv.strokeStyle = '#1e293b'; cv.lineWidth = 2; cv.strokeRect(40, 180, 260, 80);
       cv.fillStyle = '#0284c7'; cv.font = 'bold 16px Rubik';
       cv.fillText('VETERINARY CLINIC', 80, 225);
 
-      // רופא משמאל מטפל בכלב
-      cv.fillStyle = '#ffffff'; cv.fillRect(200, 110, 30, 70); // חלוק
-      cv.fillStyle = '#ffdbac'; cv.beginPath(); cv.arc(215, 95, 12, 0, Math.PI*2); cv.fill(); // ראש
-      cv.fillStyle = '#d97706'; cv.fillRect(90, 155, 40, 25); // כלב בבדיקה
+      // כלב וקטורי על הדלפק
+      drawVectorDog(cv, 80, 125);
 
-      // שדרוג 1: רופאה נוספת וכלב
+      // שדרוגים
       if (upgrades.doc) {
-        cv.fillStyle = '#ffffff'; cv.fillRect(580, 110, 30, 70);
-        cv.fillStyle = '#ffdbac'; cv.beginPath(); cv.arc(595, 95, 12, 0, Math.PI*2); cv.fill();
-        cv.fillStyle = '#b45309'; cv.fillRect(520, 115, 30, 30); // כלב מורם
+        drawVectorVet(cv, 580, 110, 'left');
+        drawVectorDog(cv, 520, 145);
       }
 
-      // שדרוג 2: ספסל המתנה
       if (upgrades.bench) {
         cv.fillStyle = '#38bdf8'; cv.fillRect(450, 200, 180, 15);
         cv.fillStyle = '#334155'; cv.fillRect(470, 215, 10, 45); cv.fillRect(600, 215, 10, 45);
-        cv.fillStyle = '#78350f'; cv.fillRect(480, 175, 35, 25); // כלב יושב על הרצפה
       }
 
-      // שדרוג 3: מכשיר אולטרסאונד/רנטגן
       if (upgrades.xray) {
         cv.fillStyle = '#1e293b'; cv.fillRect(380, 140, 50, 80);
         cv.fillStyle = '#38bdf8'; cv.fillRect(390, 150, 30, 30);
