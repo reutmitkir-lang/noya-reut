@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>הרפתקאות הווטרינר - גרסה מורחבת</title>
+  <title>הרפתקאות הווטרינר - גרסה מעוצבת</title>
   <style>
     body {
       margin: 0;
@@ -15,7 +15,7 @@
       align-items: center;
     }
 
-    /* ניווט בין מסכים */
+    /* תפריט ניווט */
     .nav-bar {
       display: flex;
       gap: 15px;
@@ -31,14 +31,15 @@
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.3s;
     }
 
     .nav-btn.active, .nav-btn:hover {
       background-color: #e94560;
+      transform: scale(1.05);
     }
 
-    /* עיצוב המסכים */
+    /* מסכים */
     .screen {
       display: none;
       flex-direction: column;
@@ -69,8 +70,11 @@
     canvas {
       border: 4px solid #ffffff;
       border-radius: 8px;
-      background-color: #5c94fc;
       box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+    }
+
+    #gameCanvas {
+      background-color: #5c94fc;
     }
 
     /* עיצוב מסך המרפאה */
@@ -81,10 +85,13 @@
       width: 100%;
       box-sizing: border-box;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    .clinic-header {
-      text-align: center;
+    #clinicCanvas {
+      background-color: #87CEEB; /* שמי תכלת למרפאה */
       margin-bottom: 20px;
     }
 
@@ -92,6 +99,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 15px;
+      width: 100%;
     }
 
     .upgrade-card {
@@ -108,11 +116,17 @@
       background-color: #4CAF50;
       color: white;
       border: none;
-      padding: 8px;
+      padding: 10px;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
+      font-size: 15px;
       margin-top: 10px;
+      transition: 0.2s;
+    }
+
+    .buy-btn:hover:not(:disabled) {
+      background-color: #45a049;
     }
 
     .buy-btn:disabled {
@@ -129,7 +143,7 @@
 </head>
 <body>
 
-  <!-- תפריט מעבר בין דפים -->
+  <!-- תפריט ניווט -->
   <div class="nav-bar">
     <button class="nav-btn active" id="btn-game" onclick="switchTab('game')">🎮 יציאה למשימה</button>
     <button class="nav-btn" id="btn-clinic" onclick="switchTab('clinic')">🏥 המרפאה שלי</button>
@@ -144,44 +158,43 @@
     </div>
 
     <canvas id="gameCanvas" width="800" height="400"></canvas>
-    <p class="controls-info">מקשים: חצים ⬅️ ➡️ להליכה | מקש רווח / ⬆️ לקפיצה | היזהרו מבורות וממכשולים!</p>
+    <p class="controls-info">מקשים: חצים ⬅️ ➡️ להליכה | מקש רווח / ⬆️ לקפיצה</p>
   </div>
 
   <!-- דף 2: המרפאה -->
   <div id="clinic-screen" class="screen">
     <div class="clinic-container">
-      <div class="clinic-header">
-        <h2>🏥 ניהול ושדרוג המרפאה הווטרינרית</h2>
-        <p>כסף זמין לשדרוגים: <strong>$<span id="clinic-coins-display">0</span></strong></p>
-        <p>רמת המרפאה: <strong id="clinic-tier-display" style="color: #4ed164;">מרפאת שדה בסיסית</strong></p>
-      </div>
+      <h2>🏥 ציור המרפאה הווטרינרית</h2>
+      <p>כסף זמין לשדרוגים: <strong>$<span id="clinic-coins-display">0</span></strong></p>
+      
+      <!-- קנבס שבו מצוירת המרפאה -->
+      <canvas id="clinicCanvas" width="760" height="280"></canvas>
 
-      <h3>שדרוגים וציוד זמין:</h3>
       <div class="upgrades-grid">
         <div class="upgrade-card">
-          <h4>🩺 ערכת עזרה ראשונה מתקדמת</h4>
-          <p>מאפשרת לטפל בחיות קטנות במהירות.</p>
+          <h4>🩺 ערכת עזרה ראשונה</h4>
+          <p>מוסיפה שלט רפואי וציוד למרפאה.</p>
           <p>מחיר: $100</p>
           <button class="buy-btn" id="buy-item1" onclick="buyUpgrade('item1', 100, 'ערכת עזרה ראשונה')">קנה שדרוג</button>
         </div>
 
         <div class="upgrade-card">
-          <h4>🛏️ מיטת בדיקות רפואית</h4>
-          <p>מגדילה את המקום במרפאה.</p>
+          <h4>🛏️ מורחב: חלונות ואישפוז</h4>
+          <p>מוסיף חלונות מוארים למבנה המרפאה.</p>
           <p>מחיר: $250</p>
-          <button class="buy-btn" id="buy-item2" onclick="buyUpgrade('item2', 250, 'מיטת בדיקות')">קנה שדרוג</button>
+          <button class="buy-btn" id="buy-item2" onclick="buyUpgrade('item2', 250, 'חלונות ואישפוז')">קנה שדרוג</button>
         </div>
 
         <div class="upgrade-card">
-          <h4>🔬 מכשיר רנטגן וטרינרי</h4>
-          <p>מאבחן שברים ופציעות קשות.</p>
+          <h4>🔬 אנטנת רנטגן לגג</h4>
+          <p>משדרגת את גג המרפאה בציוד מתקדם.</p>
           <p>מחיר: $500</p>
-          <button class="buy-btn" id="buy-item3" onclick="buyUpgrade('item3', 500, 'מכשיר רנטגן')">קנה שדרוג</button>
+          <button class="buy-btn" id="buy-item3" onclick="buyUpgrade('item3', 500, 'אנטנת רנטגן')">קנה שדרוג</button>
         </div>
 
         <div class="upgrade-card">
-          <h4>🚑 אמבולנס חילוץ לחיות</h4>
-          <p>משדרג את המרפאה לבית חולים מרכזי!</p>
+          <h4>🚑 אמבולנס חילוץ</h4>
+          <p>מעמיד אמבולנס חילוץ ליד כניסת המרפאה!</p>
           <p>מחיר: $1000</p>
           <button class="buy-btn" id="buy-item4" onclick="buyUpgrade('item4', 1000, 'אמבולנס חילוץ')">קנה שדרוג</button>
         </div>
@@ -190,7 +203,12 @@
   </div>
 
   <script>
-    // --- ניהול דפים ---
+    let coins = 0;
+    let currentLevel = 1;
+    let lives = 3;
+    let purchasedUpgrades = [];
+
+    // --- מעבר בין דפים ---
     function switchTab(screenName) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -202,54 +220,32 @@
         document.getElementById('clinic-screen').classList.add('active');
         document.getElementById('btn-clinic').classList.add('active');
         updateClinicUI();
+        drawClinicCanvas();
       }
     }
 
-    // --- נתוני משחק ---
+    // --- קוד המשחק ---
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    let coins = 0;
-    let currentLevel = 1;
-    let lives = 3;
-    let purchasedUpgrades = [];
-
-    const player = {
-      x: 50,
-      y: 200,
-      width: 32,
-      height: 48,
-      vx: 0,
-      vy: 0,
-      speed: 4.8,
-      jumpPower: -12,
-      isGrounded: false
-    };
-
+    const player = { x: 50, y: 200, width: 32, height: 48, vx: 0, vy: 0, speed: 4.8, jumpPower: -12, isGrounded: false };
     let cameraX = 0;
     const worldWidth = 2400;
 
-    // בורות ופלטפורמות (מכשולים כמו מריו)
     const platforms = [
-      { x: 0, w: 450, y: 350, h: 50 },      // אדמה 1
-      // בור מ-450 עד 580
-      { x: 580, w: 400, y: 350, h: 50 },    // אדמה 2
-      // בור מ-980 עד 1120
-      { x: 1120, w: 500, y: 350, h: 50 },   // אדמה 3
-      // בור מ-1620 עד 1750
-      { x: 1750, w: 650, y: 350, h: 50 },   // אדמה סופית
-
-      // מדפים באוויר (קפיצות אתגריות)
+      { x: 0, w: 450, y: 350, h: 50 },
+      { x: 580, w: 400, y: 350, h: 50 },
+      { x: 1120, w: 500, y: 350, h: 50 },
+      { x: 1750, w: 650, y: 350, h: 50 },
       { x: 300, w: 100, y: 260, h: 20 },
-      { x: 480, w: 80, y: 200, h: 20 },   // מדף מעל הבור
+      { x: 480, w: 80, y: 200, h: 20 },
       { x: 700, w: 120, y: 250, h: 20 },
-      { x: 1000, w: 90, y: 210, h: 20 },  // מדף מעל הבור השני
+      { x: 1000, w: 90, y: 210, h: 20 },
       { x: 1250, w: 130, y: 260, h: 20 },
       { x: 1500, w: 100, y: 200, h: 20 },
       { x: 1850, w: 120, y: 260, h: 20 }
     ];
 
-    // מטבעות לאיסוף
     let coinsList = [
       { x: 320, y: 220, collected: false },
       { x: 500, y: 160, collected: false },
@@ -263,26 +259,21 @@
     const parrot = { x: 200, y: 220 };
     const pet = { x: 2250, y: 280 };
 
-    // ניהול מקשים
     const keys = {};
     window.addEventListener('keydown', e => keys[e.code] = true);
     window.addEventListener('keyup', e => keys[e.code] = false);
 
     function update() {
-      // תנועה אופקית
       player.vx = 0;
       if (keys['ArrowRight'] || keys['KeyD']) player.vx = player.speed;
       if (keys['ArrowLeft'] || keys['KeyA']) player.vx = -player.speed;
 
-      // קפיצה
       if ((keys['Space'] || keys['ArrowUp'] || keys['KeyW']) && player.isGrounded) {
         player.vy = player.jumpPower;
         player.isGrounded = false;
       }
 
-      // גרביטציה
       player.vy += 0.55;
-
       player.x += player.vx;
       if (player.x < 0) player.x = 0;
       if (player.x > worldWidth - player.width) player.x = worldWidth - player.width;
@@ -290,7 +281,6 @@
       player.y += player.vy;
       player.isGrounded = false;
 
-      // בדיקת התנגשות בפלטפורמות
       for (let p of platforms) {
         if (
           player.x < p.x + p.w &&
@@ -305,59 +295,41 @@
         }
       }
 
-      // בדיקת נפילה לבור (פסילה!)
-      if (player.y > canvas.height + 50) {
-        playerFail("נפלת לבור!");
-      }
+      if (player.y > canvas.height + 50) playerFail("נפלת לבור!");
 
-      // מעקב מצלמה
       cameraX = player.x - 200;
       if (cameraX < 0) cameraX = 0;
       if (cameraX > worldWidth - canvas.width) cameraX = worldWidth - canvas.width;
 
-      // איסוף מטבעות
       coinsList.forEach(c => {
         if (!c.collected && Math.abs(player.x - c.x) < 30 && Math.abs(player.y - c.y) < 30) {
           c.collected = true;
-          coins += 20;
+          coins += 30;
           updateHUD();
         }
       });
 
-      // הצלת החיה בסוף
-      if (Math.abs(player.x - pet.x) < 40 && Math.abs(player.y - pet.y) < 50) {
-        rescuePet();
-      }
+      if (Math.abs(player.x - pet.x) < 40 && Math.abs(player.y - pet.y) < 50) rescuePet();
     }
 
     function playerFail(reason) {
       lives--;
       updateHUD();
       if (lives <= 0) {
-        alert(`משחק נגמר! ❌ ${reason}\nנגמרו הניסיונות. נסה את השלב מחדש!`);
+        alert(`משחק נגמר! ❌ ${reason}\nהתחלת משחק מחדש.`);
         lives = 3;
         currentLevel = 1;
       } else {
-        alert(`פסילה! ⚠️ ${reason}\nנשארו לך ${lives} חיים.`);
+        alert(`פסילה! ⚠️ ${reason}`);
       }
-      resetPlayerPosition();
-    }
-
-    function resetPlayerPosition() {
-      player.x = 50;
-      player.y = 200;
-      player.vx = 0;
-      player.vy = 0;
+      player.x = 50; player.y = 200; player.vx = 0; player.vy = 0;
     }
 
     function rescuePet() {
-      coins += 200;
-      currentLevel++;
+      coins += 200; currentLevel++;
       alert(`כל הכבוד! הצלת את החיה! 🐶🐱\nקיבלת $200!`);
-      
-      // איפוס מטבעות לשלב הבא
       coinsList.forEach(c => c.collected = false);
-      resetPlayerPosition();
+      player.x = 50; player.y = 200;
       updateHUD();
     }
 
@@ -369,11 +341,9 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       ctx.save();
       ctx.translate(-cameraX, 0);
 
-      // ציור פלטפורמות (חום/ירוק)
       for (let p of platforms) {
         ctx.fillStyle = '#8B5A2B';
         ctx.fillRect(p.x, p.y, p.w, p.h);
@@ -381,15 +351,10 @@
         ctx.fillRect(p.x, p.y, p.w, 6);
       }
 
-      // ציור מטבעות 🪙
       coinsList.forEach(c => {
-        if (!c.collected) {
-          ctx.font = '22px Arial';
-          ctx.fillText('🪙', c.x, c.y);
-        }
+        if (!c.collected) { ctx.font = '22px Arial'; ctx.fillText('🪙', c.x, c.y); }
       });
 
-      // ציור תוכי רשע
       ctx.font = '36px Arial';
       ctx.fillText('🦜', parrot.x, parrot.y);
       if (player.x < 450) {
@@ -397,30 +362,111 @@
         ctx.fillRect(parrot.x - 30, parrot.y - 60, 170, 30);
         ctx.fillStyle = '#000000';
         ctx.font = '12px Arial';
-        ctx.fillText('חחח! הדרך רצופה בורות!', parrot.x - 25, parrot.y - 40);
+        ctx.fillText('חחח! לא תגיע למרפאה!', parrot.x - 25, parrot.y - 40);
       }
 
-      // ציור החיה להצלה בסוף
       const petEmoji = currentLevel % 2 === 1 ? '🐶' : '🐱';
       ctx.font = '36px Arial';
       ctx.fillText(petEmoji, pet.x, pet.y + 35);
 
-      // ציור הווטרינר
       ctx.font = '40px Arial';
       ctx.fillText('👨‍⚕️', player.x - 5, player.y + 40);
 
       ctx.restore();
     }
 
-    // --- ניהול חנות המרפאה ---
+    // --- ציור המרפאה בקנבס ---
+    function drawClinicCanvas() {
+      const cCanvas = document.getElementById('clinicCanvas');
+      const cCtx = cCanvas.getContext('2d');
+
+      cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+
+      // ציור דשא/אדמה
+      cCtx.fillStyle = '#4CAF50';
+      cCtx.fillRect(0, 220, cCanvas.width, 60);
+
+      // ציור מבנה המרפאה
+      cCtx.fillStyle = '#ffffff';
+      cCtx.fillRect(250, 80, 260, 140); // קירות
+      cCtx.strokeStyle = '#cccccc';
+      cCtx.strokeRect(250, 80, 260, 140);
+
+      // ציור גג רעפים אדום
+      cCtx.fillStyle = '#e94560';
+      cCtx.beginPath();
+      cCtx.moveTo(230, 80);
+      cCtx.lineTo(380, 30);
+      cCtx.lineTo(530, 80);
+      cCtx.closePath();
+      cCtx.fill();
+
+      // דלת כניסה
+      cCtx.fillStyle = '#8B5A2B';
+      cCtx.fillRect(350, 150, 50, 70);
+      cCtx.fillStyle = '#FFD700';
+      cCtx.beginPath();
+      cCtx.arc(390, 185, 4, 0, Math.PI * 2); // ידית
+      cCtx.fill();
+
+      // שדרוג 1: שלט רפואי
+      if (purchasedUpgrades.includes('item1')) {
+        cCtx.fillStyle = '#ffffff';
+        cCtx.fillRect(330, 95, 90, 30);
+        cCtx.strokeStyle = '#000000';
+        cCtx.strokeRect(330, 95, 90, 30);
+        cCtx.fillStyle = '#ff0000';
+        cCtx.font = 'bold 20px Arial';
+        cCtx.fillText('➕ מרפאה', 335, 117);
+      } else {
+        cCtx.fillStyle = '#333333';
+        cCtx.font = '14px Arial';
+        cCtx.fillText('מרפאה בבנייה', 340, 115);
+      }
+
+      // שדרוג 2: חלונות מוארים עם חיות
+      if (purchasedUpgrades.includes('item2')) {
+        // חלון שמאל
+        cCtx.fillStyle = '#87CEFA';
+        cCtx.fillRect(270, 110, 45, 45);
+        cCtx.font = '20px Arial';
+        cCtx.fillText('🐱', 280, 140);
+
+        // חלון ימין
+        cCtx.fillRect(445, 110, 45, 45);
+        cCtx.fillText('🐶', 455, 140);
+      }
+
+      // שדרוג 3: אנטנה / מכשור על הגג
+      if (purchasedUpgrades.includes('item3')) {
+        cCtx.strokeStyle = '#555555';
+        cCtx.lineWidth = 3;
+        cCtx.beginPath();
+        cCtx.moveTo(380, 30);
+        cCtx.lineTo(380, 5);
+        cCtx.stroke();
+        cCtx.fillStyle = '#00ff00';
+        cCtx.beginPath();
+        cCtx.arc(380, 5, 5, 0, Math.PI * 2);
+        cCtx.fill();
+        cCtx.lineWidth = 1;
+      }
+
+      // שדרוג 4: אמבולנס חוני ליד המרפאה
+      if (purchasedUpgrades.includes('item4')) {
+        cCtx.font = '55px Arial';
+        cCtx.fillText('🚑', 130, 220);
+      }
+
+      // דמויות בחוץ (וטרינר וחיות)
+      cCtx.font = '35px Arial';
+      cCtx.fillText('👨‍⚕️', 415, 220);
+      cCtx.fillText('🐰', 460, 220);
+    }
+
+    // --- ניהול חנות ---
     function updateClinicUI() {
       document.getElementById('clinic-coins-display').innerText = coins;
-      
-      if (purchasedUpgrades.length === 4) {
-        document.getElementById('clinic-tier-display').innerText = "בית חולים מרכזי מתקדם 🏥🏥🏥";
-      } else if (purchasedUpgrades.length >= 2) {
-        document.getElementById('clinic-tier-display').innerText = "מרפאה עירונית מורחבת 🏥✨";
-      }
     }
 
     function buyUpgrade(itemId, cost, name) {
@@ -431,9 +477,10 @@
         document.getElementById(`buy-${itemId}`).innerText = "נרכש! ✔️";
         updateHUD();
         updateClinicUI();
-        alert(`תתחדשו! רכשתם: ${name}`);
+        drawClinicCanvas(); // ציור מחדש של המרפאה עם השדרוג!
+        alert(`איזה יופי! רכשתם: ${name}`);
       } else {
-        alert("אין לך מספיק כסף! צא למשימות נוספות והאסוף מטבעות.");
+        alert("אין לכן מספיק כסף! צאו למשימות ואספו עוד מטבעות.");
       }
     }
 
@@ -447,3 +494,4 @@
   </script>
 </body>
 </html>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&display=swap" rel="stylesheet">
